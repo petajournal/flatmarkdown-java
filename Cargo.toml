@@ -1,6 +1,6 @@
 [package]
 name = "flatmarkdown-java"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 [lib]
@@ -9,4 +9,4 @@ name = "flatmarkdown_java"
 path = "rust/lib.rs"
 
 [dependencies]
-flatmarkdown = "0.1.0"
+flatmarkdown = "0.1.1"
