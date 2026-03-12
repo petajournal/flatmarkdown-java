@@ -44,4 +44,21 @@ Or simply run `bash build.sh`.
 </dependency>
 ```
 
+To use a -SNAPSHOT artifact, add the snapshots repository.
+```xml
+<repositories>
+  <repository>
+    <name>Central Portal Snapshots</name>
+    <id>central-portal-snapshots</id>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    <releases>
+      <enabled>false</enabled>
+    </releases>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+  </repository>
+</repositories>
+```
+
 The consuming application must pass `--enable-native-access=ALL-UNNAMED` as a JVM argument.
