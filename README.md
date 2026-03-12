@@ -30,9 +30,6 @@ cargo build --release
 # Copy DLL to Maven resources
 mkdir -p src/main/resources/win32-x86-64
 cp target/release/flatmarkdown_java.dll src/main/resources/win32-x86-64/
-
-# Build and install JAR to local Maven repository
-mvn install
 ```
 
 Or simply run `bash build.sh`.
