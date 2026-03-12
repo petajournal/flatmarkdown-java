@@ -12,7 +12,17 @@ import java.lang.invoke.MethodHandle;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
+/**
+ * Java bindings for the
+ * <a href="https://github.com/petajournal/flatmarkdown">Flatmarkdown</a>
+ * native library, providing Markdown-to-HTML and Markdown-to-AST conversion
+ * via the Foreign Function &amp; Memory API.
+ *
+ * @see <a href="https://github.com/petajournal/flatmarkdown">Flatmarkdown on
+ *      GitHub</a>
+ */
 public class FlatmarkdownJava {
 
     private static final MethodHandle MARKDOWN_TO_HTML;
@@ -39,7 +49,17 @@ public class FlatmarkdownJava {
                 lookup.find("free_string").orElseThrow(), freeStr);
     }
 
+    /**
+     * Converts a Markdown string to HTML.
+     *
+     * @param input the Markdown text to convert; must not be {@code null}
+     * @return the resulting HTML string
+     * @throws RuntimeException     if the native call fails
+     * @throws NullPointerException if {@code input} is {@code null}
+     */
     public static String markdownToHtml(String input) {
+        Objects.requireNonNull(input);
+
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment inputSeg = arena.allocateFrom(input);
             MemorySegment resultPtr = (MemorySegment) MARKDOWN_TO_HTML.invokeExact(inputSeg);
@@ -51,7 +71,23 @@ public class FlatmarkdownJava {
         }
     }
 
+    /**
+     * Converts a Markdown string to an AST (Abstract Syntax Tree) in JSON format.
+     *
+     * <p>
+     * For details on the AST specification, see the
+     * <a href="https://github.com/petajournal/flatmarkdown">Flatmarkdown</a>
+     * documentation.
+     * </p>
+     *
+     * @param input the Markdown text to parse; must not be {@code null}
+     * @return the AST as a JSON string
+     * @throws RuntimeException     if the native call fails
+     * @throws NullPointerException if {@code input} is {@code null}
+     */
     public static String markdownToAst(String input) {
+        Objects.requireNonNull(input);
+
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment inputSeg = arena.allocateFrom(input);
             MemorySegment resultPtr = (MemorySegment) MARKDOWN_TO_AST.invokeExact(inputSeg);
