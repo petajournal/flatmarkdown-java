@@ -32,9 +32,9 @@ mkdir -p src/main/resources/win32-x86-64
 # Win
 cp target/release/flatmarkdown_java.dll src/main/resources/win32-x86-64/
 # macOS
-cp target/release/flatmarkdown_java.dll src/main/resources/darwin-aarch64/
+cp target/release/libflatmarkdown_java.dylib src/main/resources/darwin-aarch64/
 # Linux
-cp target/release/flatmarkdown_java.dll src/main/resources/linux-x86-64/
+cp target/release/libmylib.so src/main/resources/linux-x86-64/
 ```
 
 Or simply run `bash build.sh`.
