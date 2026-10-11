@@ -17,16 +17,23 @@ import java.util.Objects;
 /**
  * Java bindings for the
  * <a href="https://github.com/petajournal/flatmarkdown">Flatmarkdown</a>
- * native library, providing Markdown-to-HTML and Markdown-to-AST conversion
- * via the Foreign Function &amp; Memory API.
+ * native library via the Foreign Function &amp; Memory API.
+ *
+ * <p>
+ * Flat Markdown is an outline format defined by the
+ * <a href="https://github.com/petajournal/flatmarkdown-spec/">Flat Markdown
+ * specification</a>. A page is split into items by Markdown blocks. Each item
+ * may carry a metadata line such as {@code <!-- @@ ID key="value" -->}.
+ * </p>
  *
  * @see <a href="https://github.com/petajournal/flatmarkdown">Flatmarkdown on
  *      GitHub</a>
  */
 public class FlatmarkdownJava {
 
-    private static final MethodHandle MARKDOWN_TO_HTML;
-    private static final MethodHandle MARKDOWN_TO_AST;
+    private static final MethodHandle BODY_TO_HTML;
+    private static final MethodHandle BODY_TO_AST;
+    private static final MethodHandle PAGE_TO_AST;
     private static final MethodHandle FREE_STRING;
 
     static {
@@ -41,12 +48,66 @@ public class FlatmarkdownJava {
         // char* -> void (frees heap-allocated string)
         FunctionDescriptor freeStr = FunctionDescriptor.ofVoid(ValueLayout.ADDRESS);
 
-        MARKDOWN_TO_HTML = linker.downcallHandle(
-                lookup.find("markdown_to_html").orElseThrow(), strToStr);
-        MARKDOWN_TO_AST = linker.downcallHandle(
-                lookup.find("markdown_to_ast").orElseThrow(), strToStr);
+        BODY_TO_HTML = linker.downcallHandle(
+                lookup.find("body_to_html").orElseThrow(), strToStr);
+        BODY_TO_AST = linker.downcallHandle(
+                lookup.find("body_to_ast").orElseThrow(), strToStr);
+        PAGE_TO_AST = linker.downcallHandle(
+                lookup.find("page_to_ast").orElseThrow(), strToStr);
         FREE_STRING = linker.downcallHandle(
                 lookup.find("free_string").orElseThrow(), freeStr);
+    }
+
+    /**
+     * Parses a whole Flat Markdown page into a JSON string.
+     *
+     * <p>
+     * The result has the form
+     * {@code {"type":"page","front_matter":string|null,"items":[...]}}. Each item
+     * has {@code level}, {@code id}, {@code properties}, {@code body}, and
+     * {@code ast}. See the Flatmarkdown AST specification for details.
+     * </p>
+     *
+     * @param input the Flat Markdown page; must not be {@code null}
+     * @return the page as a JSON string
+     * @throws RuntimeException     if the native call fails
+     * @throws NullPointerException if {@code input} is {@code null}
+     */
+    public static String pageToAst(String input) {
+        Objects.requireNonNull(input, "input must not be null");
+        return callNative(PAGE_TO_AST, input);
+    }
+
+    /**
+     * Converts the body of one Flat Markdown item to HTML.
+     *
+     * @param input the item body; must not be {@code null}
+     * @return the resulting HTML string
+     * @throws RuntimeException     if the native call fails
+     * @throws NullPointerException if {@code input} is {@code null}
+     */
+    public static String bodyToHtml(String input) {
+        Objects.requireNonNull(input, "input must not be null");
+        return callNative(BODY_TO_HTML, input);
+    }
+
+    /**
+     * Parses the body of one Flat Markdown item into an AST in JSON format.
+     *
+     * <p>
+     * For details on the AST specification, see the
+     * <a href="https://github.com/petajournal/flatmarkdown">Flatmarkdown</a>
+     * documentation.
+     * </p>
+     *
+     * @param input the item body; must not be {@code null}
+     * @return the AST as a JSON string
+     * @throws RuntimeException     if the native call fails
+     * @throws NullPointerException if {@code input} is {@code null}
+     */
+    public static String bodyToAst(String input) {
+        Objects.requireNonNull(input, "input must not be null");
+        return callNative(BODY_TO_AST, input);
     }
 
     /**
@@ -56,41 +117,31 @@ public class FlatmarkdownJava {
      * @return the resulting HTML string
      * @throws RuntimeException     if the native call fails
      * @throws NullPointerException if {@code input} is {@code null}
+     * @deprecated Use {@link #bodyToHtml(String)}.
      */
+    @Deprecated
     public static String markdownToHtml(String input) {
-        Objects.requireNonNull(input);
-
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment inputSeg = arena.allocateFrom(input);
-            MemorySegment resultPtr = (MemorySegment) MARKDOWN_TO_HTML.invokeExact(inputSeg);
-            String result = resultPtr.reinterpret(Long.MAX_VALUE).getString(0);
-            FREE_STRING.invokeExact(resultPtr);
-            return result;
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+        return bodyToHtml(input);
     }
 
     /**
-     * Converts a Markdown string to an AST (Abstract Syntax Tree) in JSON format.
-     *
-     * <p>
-     * For details on the AST specification, see the
-     * <a href="https://github.com/petajournal/flatmarkdown">Flatmarkdown</a>
-     * documentation.
-     * </p>
+     * Converts a Markdown string to an AST in JSON format.
      *
      * @param input the Markdown text to parse; must not be {@code null}
      * @return the AST as a JSON string
      * @throws RuntimeException     if the native call fails
      * @throws NullPointerException if {@code input} is {@code null}
+     * @deprecated Use {@link #bodyToAst(String)}.
      */
+    @Deprecated
     public static String markdownToAst(String input) {
-        Objects.requireNonNull(input);
+        return bodyToAst(input);
+    }
 
+    private static String callNative(MethodHandle handle, String input) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment inputSeg = arena.allocateFrom(input);
-            MemorySegment resultPtr = (MemorySegment) MARKDOWN_TO_AST.invokeExact(inputSeg);
+            MemorySegment resultPtr = (MemorySegment) handle.invokeExact(inputSeg);
             String result = resultPtr.reinterpret(Long.MAX_VALUE).getString(0);
             FREE_STRING.invokeExact(resultPtr);
             return result;
