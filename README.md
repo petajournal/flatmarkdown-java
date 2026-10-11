@@ -14,12 +14,21 @@ The native library is bundled inside the JAR and loaded automatically at runtime
 ```java
 import com.sosuisha.flatmarkdown.FlatmarkdownJava;
 
-String html = FlatmarkdownJava.markdownToHtml("# Hello");
+// Split a Flat Markdown page into items with metadata
+String page = FlatmarkdownJava.pageToAst("<!-- @@ 2026-09-27-15-00-16-W3N8ASY -->\n- [ ] Task1\n\nParagraph");
+// => {"type":"page","front_matter":null,"items":[{"level":2,"id":"2026-09-27-15-00-16-W3N8ASY","properties":{},"body":"- [ ] Task1","ast":{...}},{"level":1,"id":null,...}]}
+
+// Convert one item body
+String html = FlatmarkdownJava.bodyToHtml("# Hello");
 // => "<h1>Hello</h1>\n"
 
-String ast = FlatmarkdownJava.markdownToAst("# Hello");
+String ast = FlatmarkdownJava.bodyToAst("# Hello");
 // => {"type":"document","children":[{"type":"heading","level":1,...}]}
 ```
+
+`markdownToHtml` and `markdownToAst` still work but are deprecated. Use `bodyToHtml` and `bodyToAst` instead.
+
+The AST format is described in the [flatmarkdown AST specification](https://github.com/petajournal/flatmarkdown/blob/main/SPEC_AST.md).
 
 ## Build
 
