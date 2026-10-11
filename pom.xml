@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.sosuisha</groupId>
   <artifactId>flatmarkdown</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.4.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Flatmarkdown Java</name>
   <description>A Java wrapper for the Flatmarkdown library using the Foreign Function &amp; Memory API</description>

@@ -49,7 +49,7 @@ Or simply run `bash build.sh`.
 <dependency>
     <groupId>com.sosuisha</groupId>
     <artifactId>flatmarkdown</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.4.0-SNAPSHOT</version>
 </dependency>
 ```
 

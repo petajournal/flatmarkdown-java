@@ -14,4 +14,4 @@ cp target/release/flatmarkdown_java.dll src/main/resources/win32-x86-64/
 echo "Building Maven JAR..."
 mvn clean package
 
-echo "Done! JAR is at target/flatmarkdown-1.0.0-SNAPSHOT.jar"
+echo "Done! JAR is at target/flatmarkdown-0.4.0-SNAPSHOT.jar"
