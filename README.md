@@ -69,6 +69,7 @@ Releases are published to Maven Central by GitHub Actions (`.github/workflows/re
 
 The workflow runs when a tag that starts with `v` is pushed, for example `v1.0.0`.
 It builds the native library on macOS (arm64), Windows (x86-64), and Linux (x86-64), bundles all three into one JAR, signs the files with GPG, and runs `./mvnw deploy`.
+The Linux library is built with `cargo-zigbuild` against glibc 2.17, so it runs on most distributions released since 2014.
 
 Before the first release, add these four **Repository secrets** (Settings → Secrets and variables → Actions):
 
