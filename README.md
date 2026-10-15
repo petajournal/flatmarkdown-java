@@ -57,26 +57,8 @@ Or simply run `bash build.sh`.
 <dependency>
     <groupId>com.sosuisha</groupId>
     <artifactId>flatmarkdown</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
-```
-
-To use a -SNAPSHOT artifact, add the snapshots repository.
-
-```xml
-<repositories>
-  <repository>
-    <name>Central Portal Snapshots</name>
-    <id>central-portal-snapshots</id>
-    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-    <releases>
-      <enabled>false</enabled>
-    </releases>
-    <snapshots>
-      <enabled>true</enabled>
-    </snapshots>
-  </repository>
-</repositories>
 ```
 
 The consuming application must pass `--enable-native-access=ALL-UNNAMED` as a JVM argument.
@@ -85,7 +67,7 @@ The consuming application must pass `--enable-native-access=ALL-UNNAMED` as a JV
 
 Releases are published to Maven Central by GitHub Actions (`.github/workflows/release.yml`).
 
-The workflow runs when a tag that starts with `v` is pushed, for example `v0.4.0`.
+The workflow runs when a tag that starts with `v` is pushed, for example `v1.0.0`.
 It builds the native library on macOS (arm64) and Windows (x86-64), bundles both into one JAR, signs the files with GPG, and runs `./mvnw deploy`.
 
 Before the first release, add these four **Repository secrets** (Settings → Secrets and variables → Actions):
@@ -109,6 +91,6 @@ To release:
 2. Tag and push:
 
 ```sh
-git tag v0.4.0
-git push origin v0.4.0
+git tag v1.0.0
+git push origin v1.0.0
 ```
