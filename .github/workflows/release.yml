@@ -21,14 +21,14 @@ jobs:
             resource_dir: win32-x86-64
             lib_file: flatmarkdown_java.dll
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: dtolnay/rust-toolchain@stable
 
       - name: Build Rust cdylib
         run: cargo build --release
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.resource_dir }}
           path: target/release/${{ matrix.lib_file }}
@@ -39,11 +39,11 @@ jobs:
     needs: native
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Each artifact lands in src/main/resources/<resource_dir>/<lib_file>,
       # the same layout build.sh produces locally.
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           path: src/main/resources
 
@@ -52,7 +52,7 @@ jobs:
 
       # setup-java imports the GPG key and writes ~/.m2/settings.xml with the
       # "central" server. The server id must match publishingServerId in pom.xml.
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 25
