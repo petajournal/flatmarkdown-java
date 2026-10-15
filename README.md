@@ -57,7 +57,7 @@ Or simply run `bash build.sh`.
 <dependency>
     <groupId>com.sosuisha</groupId>
     <artifactId>flatmarkdown</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
