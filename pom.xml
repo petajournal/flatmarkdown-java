@@ -37,7 +37,7 @@
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.7.0</version>
+        <version>0.12.0</version>
         <extensions>true</extensions>
         <configuration>
           <publishingServerId>central</publishingServerId>
@@ -94,4 +94,38 @@
     <developerConnection>scm:git:ssh://github.com/petajournal/flatmarkdown-java.git</developerConnection>
     <url>https://github.com/petajournal/flatmarkdown-java/tree/main</url>
   </scm>
+
+  <profiles>
+    <!-- Signing is only needed for Maven Central. Keep it out of the default
+         build so local `mvn package` works without a GPG key. -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.8</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <!-- CI has no TTY. Without loopback mode gpg waits for a
+                       passphrase prompt and the build hangs. -->
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
