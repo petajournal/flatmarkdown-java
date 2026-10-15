@@ -59,6 +59,7 @@ Or simply run `bash build.sh`.
 ```
 
 To use a -SNAPSHOT artifact, add the snapshots repository.
+
 ```xml
 <repositories>
   <repository>
@@ -76,3 +77,35 @@ To use a -SNAPSHOT artifact, add the snapshots repository.
 ```
 
 The consuming application must pass `--enable-native-access=ALL-UNNAMED` as a JVM argument.
+
+## Release
+
+Releases are published to Maven Central by GitHub Actions (`.github/workflows/release.yml`).
+
+The workflow runs when a tag that starts with `v` is pushed, for example `v0.4.0`.
+It builds the native library on macOS (arm64) and Windows (x86-64), bundles both into one JAR, signs the files with GPG, and runs `mvn deploy`.
+
+Before the first release, add these four **Repository secrets** (Settings → Secrets and variables → Actions):
+
+| Secret | Value |
+| --- | --- |
+| `GPG_PRIVATE_KEY` | Output of `gpg --armor --export-secret-keys <KEY_ID>` |
+| `GPG_PASSPHRASE` | Passphrase of the GPG key |
+| `CENTRAL_USERNAME` | Username part of the Central Portal user token |
+| `CENTRAL_PASSWORD` | Password part of the Central Portal user token |
+
+The public key must be on a key server, or Maven Central cannot verify the signatures:
+
+```sh
+gpg --keyserver keyserver.ubuntu.com --send-keys <KEY_ID>
+```
+
+To release:
+
+1. Set a non-SNAPSHOT version in `pom.xml` and commit it.
+2. Tag and push:
+
+```sh
+git tag v0.4.0
+git push origin v0.4.0
+```
