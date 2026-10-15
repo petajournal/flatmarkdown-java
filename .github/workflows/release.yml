@@ -20,6 +20,9 @@ jobs:
           - os: windows-latest
             resource_dir: win32-x86-64
             lib_file: flatmarkdown_java.dll
+          - os: ubuntu-latest
+            resource_dir: linux-x86-64
+            lib_file: libflatmarkdown_java.so
     steps:
       - uses: actions/checkout@v7
 
