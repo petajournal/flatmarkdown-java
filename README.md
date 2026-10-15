@@ -10,7 +10,7 @@ The native library is bundled inside the JAR and loaded automatically at runtime
 - Rust toolchain (for building the native library)
 
 Maven is not required. The Maven Wrapper (`./mvnw`, or `mvnw.cmd` on Windows) downloads Maven 3.9 on first use.
-Use the wrapper instead of a system `mvn`. Maven 4 does not send the `central` server credentials to Central Portal, so `mvn deploy` fails with HTTP 401.
+Use the wrapper instead of a system `mvn`. Maven 3 and Maven 4 deploy to Maven Central in different ways. The wrapper pins Maven 3 to match a local `settings.xml` written for Maven 3.
 
 ## API
 
