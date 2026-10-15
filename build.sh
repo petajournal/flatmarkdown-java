@@ -33,6 +33,6 @@ cp "target/release/${lib_file}" "src/main/resources/${resource_dir}/"
 
 # Build Maven JAR
 echo "Building Maven JAR..."
-mvn clean package
+./mvnw clean package
 
 echo "Done! JAR is at target/flatmarkdown-0.4.0-SNAPSHOT.jar"
