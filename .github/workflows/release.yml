@@ -63,8 +63,10 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      # Use the wrapper, not the runner's Maven. The runner ships Maven 4, which
+      # refuses to send the "central" server credentials to central.sonatype.com.
       - name: Deploy
-        run: mvn -B -Prelease deploy
+        run: ./mvnw -B -Prelease deploy
         env:
           MAVEN_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
