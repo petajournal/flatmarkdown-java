@@ -21,7 +21,7 @@ import java.util.Objects;
  *
  * <p>
  * Flat Markdown is an outline format defined by the
- * <a href="https://github.com/petajournal/flatmarkdown-spec/">Flat Markdown
+ * <a href="https://github.com/petajournal/flatmarkdown/blob/main/SPEC.md">Flat Markdown
  * specification</a>. A page is split into items by Markdown blocks. Each item
  * may carry a metadata line such as {@code <!-- @@ ID key="value" -->}.
  * </p>
