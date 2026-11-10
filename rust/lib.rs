@@ -22,17 +22,23 @@ fn call_str(input: *const c_char, f: fn(&str) -> String) -> *mut c_char {
 
 #[no_mangle]
 pub extern "C" fn body_to_html(input: *const c_char) -> *mut c_char {
-    call_str(input, |s| flatmarkdown::body_to_html_with(s, &body_options()))
+    call_str(input, |s| {
+        flatmarkdown_ast2html::ast_to_html(&flatmarkdown::body_to_ast_with(s, &body_options()))
+    })
 }
 
 #[no_mangle]
 pub extern "C" fn body_to_ast(input: *const c_char) -> *mut c_char {
-    call_str(input, |s| flatmarkdown::body_to_ast_with(s, &body_options()))
+    call_str(input, |s| {
+        flatmarkdown::body_to_ast_with(s, &body_options()).to_json()
+    })
 }
 
 #[no_mangle]
 pub extern "C" fn page_to_ast(input: *const c_char) -> *mut c_char {
-    call_str(input, |s| flatmarkdown::page_to_ast_with(s, &body_options()))
+    call_str(input, |s| {
+        flatmarkdown::page_to_ast_with(s, &body_options()).to_json()
+    })
 }
 
 #[no_mangle]
